@@ -38,7 +38,7 @@ int main (int argc, char *argv[])
 				 "Y", StringValue ("ns3::UniformRandomVariable[Min=200.0|Max=300.0]"),
 				 "Z", StringValue ("ns3::UniformRandomVariable[Min=0.0|Max=200.0]"));
 
-  mobility.SetMobilityModel ("ns3::GaussMarkovMobilityModel",
+  mobility.SetMobilityModel ("ns3::ObstacleGaussMarkovMobilityModel",
 			     "MeanVelocity", StringValue ("ns3::UniformRandomVariable[Min=20.0|Max=25.0]"),
 			     "MeanPitch", StringValue ("ns3::UniformRandomVariable[Min=0.0|Max=3.141592]"),
 			     "Alpha", DoubleValue (0.7),
@@ -46,7 +46,7 @@ int main (int argc, char *argv[])
 
   mobility.Install (sta);
 
-  Ptr<GaussMarkovMobilityModel> mob = sta.Get(0)->GetObject<GaussMarkovMobilityModel> ();
+  Ptr<ObstacleGaussMarkovMobilityModel> mob = sta.Get(0)->GetObject<ObstacleGaussMarkovMobilityModel> ();
   mob->AddObstacle(Box(100, 200.0, 100, 200.0, 0.0, 200.0));
   mob->AddObstacle(Box(0.0, 100.0, 0.0, 100.0, 0.0, 100.0));
 

@@ -24,6 +24,7 @@ def build(bld):
         'helper/ns2-mobility-helper.cc',
         'model/random-walk-3d-mobility-model.cc',
         'model/random-direction-3d-mobility-model.cc',
+        'model/obstacle-gauss-markov-mobility-model.cc',
         ]
 
     mobility_test = bld.create_ns3_module_test_library('mobility')
@@ -61,6 +62,7 @@ def build(bld):
         'helper/ns2-mobility-helper.h',
         'model/random-walk-3d-mobility-model.h',
         'model/random-direction-3d-mobility-model.h',
+        'model/obstacle-gauss-markov-mobility-model.h',
         ]
 
     if (bld.env['ENABLE_EXAMPLES']):

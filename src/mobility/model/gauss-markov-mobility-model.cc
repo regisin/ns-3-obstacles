@@ -23,20 +23,20 @@
 #include "ns3/double.h"
 #include "ns3/pointer.h"
 #include "ns3/string.h"
-#include "gauss-markov-mobility-model.h"
+#include "obstacle-gauss-markov-mobility-model.h"
 #include "position-allocator.h"
 
 namespace ns3 {
 
-  NS_OBJECT_ENSURE_REGISTERED (GaussMarkovMobilityModel);
+  NS_OBJECT_ENSURE_REGISTERED (ObstacleGaussMarkovMobilityModel);
 
   TypeId
-  GaussMarkovMobilityModel::GetTypeId (void)
+  ObstacleGaussMarkovMobilityModel::GetTypeId (void)
   {
-    static TypeId tid = TypeId ("ns3::GaussMarkovMobilityModel")
+    static TypeId tid = TypeId ("ns3::ObstacleGaussMarkovMobilityModel")
 		.SetParent<MobilityModel> ()
 		.SetGroupName ("Mobility")
-		.AddConstructor<GaussMarkovMobilityModel> ()
+		.AddConstructor<ObstacleGaussMarkovMobilityModel> ()
 		.AddAttribute ("Bounds","Bounds of the area to cruise.",BoxValue (Box (-100.0, 100.0, -100.0, 100.0, 0.0, 100.0)),MakeBoxAccessor (&GaussMarkovMobilityModel::m_bounds),MakeBoxChecker ())
 		.AddAttribute ("TimeStep","Change current direction and speed after moving for this time.",TimeValue (Seconds (1.0)),MakeTimeAccessor (&GaussMarkovMobilityModel::m_timeStep),MakeTimeChecker ())
 		.AddAttribute ("Alpha","A constant representing the tunable parameter in the Gauss-Markov model.",DoubleValue (1.0),MakeDoubleAccessor (&GaussMarkovMobilityModel::m_alpha),MakeDoubleChecker<double> ())
@@ -51,18 +51,18 @@ namespace ns3 {
     return tid;
   }
 
-  GaussMarkovMobilityModel::GaussMarkovMobilityModel ()
+  ObstacleGaussMarkovMobilityModel::ObstacleGaussMarkovMobilityModel ()
   {
     m_meanVelocity = 0.0;
     m_meanDirection = 0.0;
     m_meanPitch = 0.0;
-    m_event = Simulator::ScheduleNow (&GaussMarkovMobilityModel::Start, this);
+    m_event = Simulator::ScheduleNow (&ObstacleGaussMarkovMobilityModel::Start, this);
     m_helper.Unpause ();
     m_closestObstacle = -1;
   }
 
   void
-  GaussMarkovMobilityModel::AddObstacle (const Box &obstacle)
+  ObstacleGaussMarkovMobilityModel::AddObstacle (const Box &obstacle)
   {
 //    double fat = 50;//m_Velocity*m_timeStep.GetSeconds();
 //    m_obstacles.push_back(Box(obstacle.xMin-fat,obstacle.xMax+fat,obstacle.yMin-fat,obstacle.yMax+fat,obstacle.zMin-fat,obstacle.zMax+fat));
@@ -70,7 +70,7 @@ namespace ns3 {
   }
 
   void
-  GaussMarkovMobilityModel::Start (void)
+  ObstacleGaussMarkovMobilityModel::Start (void)
   {
     if (m_meanVelocity == 0.0)
       {
@@ -121,7 +121,7 @@ namespace ns3 {
   }
 
   void
-  GaussMarkovMobilityModel::DoWalk (Time delayLeft)
+  ObstacleGaussMarkovMobilityModel::DoWalk (Time delayLeft)
   {
     m_helper.UpdateWithBounds (m_bounds);
     Vector position = m_helper.GetCurrentPosition ();
@@ -151,7 +151,7 @@ namespace ns3 {
   	  obstacle_id++;
   	}
         Time delay_tmp = Seconds(distance/speedM);
-        m_event = Simulator::Schedule (delay_tmp, &GaussMarkovMobilityModel::Start, this);
+        m_event = Simulator::Schedule (delay_tmp, &ObstacleGaussMarkovMobilityModel::Start, this);
       }
     else
       {
@@ -171,14 +171,14 @@ namespace ns3 {
   	}
         Time delay_tmp = Seconds(distance/speedM);
 
-        m_event = Simulator::Schedule (delay_tmp, &GaussMarkovMobilityModel::Rebound, this,
+        m_event = Simulator::Schedule (delay_tmp, &ObstacleGaussMarkovMobilityModel::Rebound, this,
   				     delayLeft - delay_tmp);
       }
     NotifyCourseChange ();
   }
 
   void
-  GaussMarkovMobilityModel::Rebound (Time delayLeft)
+  ObstacleGaussMarkovMobilityModel::Rebound (Time delayLeft)
   {
     m_helper.UpdateWithBounds (m_bounds);
     Vector position = m_helper.GetCurrentPosition ();
@@ -215,33 +215,33 @@ namespace ns3 {
   }
 
   void
-  GaussMarkovMobilityModel::DoDispose (void)
+  ObstacleGaussMarkovMobilityModel::DoDispose (void)
   {
     // chain up
     MobilityModel::DoDispose ();
   }
 
   Vector
-  GaussMarkovMobilityModel::DoGetPosition (void) const
+  ObstacleGaussMarkovMobilityModel::DoGetPosition (void) const
   {
     m_helper.Update ();
     return m_helper.GetCurrentPosition ();
   }
   void
-  GaussMarkovMobilityModel::DoSetPosition (const Vector &position)
+  ObstacleGaussMarkovMobilityModel::DoSetPosition (const Vector &position)
   {
     m_helper.SetPosition (position);
     Simulator::Remove (m_event);
-    m_event = Simulator::ScheduleNow (&GaussMarkovMobilityModel::Start, this);
+    m_event = Simulator::ScheduleNow (&ObstacleGaussMarkovMobilityModel::Start, this);
   }
   Vector
-  GaussMarkovMobilityModel::DoGetVelocity (void) const
+  ObstacleGaussMarkovMobilityModel::DoGetVelocity (void) const
   {
     return m_helper.GetVelocity ();
   }
 
   int64_t
-  GaussMarkovMobilityModel::DoAssignStreams (int64_t stream)
+  ObstacleGaussMarkovMobilityModel::DoAssignStreams (int64_t stream)
   {
     m_rndMeanVelocity->SetStream (stream);
     m_normalVelocity->SetStream (stream + 1);

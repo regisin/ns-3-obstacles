@@ -79,7 +79,7 @@ namespace ns3 {
  * for Ad Hoc Network Research", Wireless Communications and Mobile Computing,
  * Wiley, vol.2 iss.5, September 2002, pp.483-502
  */
-class GaussMarkovMobilityModel : public MobilityModel
+class ObstacleGaussMarkovMobilityModel : public MobilityModel
 {
 public:
   /**
@@ -87,7 +87,7 @@ public:
    * \return the object TypeId
    */
   static TypeId GetTypeId (void);
-  GaussMarkovMobilityModel ();
+  ObstacleGaussMarkovMobilityModel ();
   /**
    * \param obstacle an obstacle to be added
    *

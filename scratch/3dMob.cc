@@ -119,7 +119,7 @@ Experiment::Run(double simtime, int model, uint32_t nodes, uint32_t speed, bool 
 	}
       break;
     case Experiment::GAUSS_MARKOV:
-      mobility.SetMobilityModel ("ns3::GaussMarkovMobilityModel",
+      mobility.SetMobilityModel ("ns3::ObstacleGaussMarkovMobilityModel",
 				 "MeanVelocity", StringValue ("ns3::UniformRandomVariable[Min=20.0|Max=25.0]"),
 				 "MeanPitch", StringValue ("ns3::UniformRandomVariable[Min=0.0|Max=6.14156]"),
 				 "Alpha", DoubleValue (0.7),
@@ -127,7 +127,7 @@ Experiment::Run(double simtime, int model, uint32_t nodes, uint32_t speed, bool 
       mobility.Install (sta);
       if (withObstacles)
 	{
-	  Ptr<GaussMarkovMobilityModel> mob = sta.Get(0)->GetObject<GaussMarkovMobilityModel> ();
+	  Ptr<ObstacleGaussMarkovMobilityModel> mob = sta.Get(0)->GetObject<ObstacleGaussMarkovMobilityModel> ();
 	  mob->AddObstacle(Box(0.0, 100.0, 0.0, 100.0, 0.0, 100.0));
 	  mob->AddObstacle(Box(100, 200.0, 100, 200.0, 0.0, 200.0));
 	}

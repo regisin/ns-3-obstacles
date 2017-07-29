@@ -21,8 +21,8 @@
  *
  * Modifications made by: Paulo Regis <pregis@nevada.unr.edu>
  */
-#ifndef GAUSS_MARKOV_MOBILITY_MODEL_H
-#define GAUSS_MARKOV_MOBILITY_MODEL_H
+#ifndef OBS_GAUSS_MARKOV_MOBILITY_MODEL_H
+#define OBS_GAUSS_MARKOV_MOBILITY_MODEL_H
 
 #include "constant-velocity-helper.h"
 #include "mobility-model.h"

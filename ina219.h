@@ -1,88 +1,128 @@
-#ifndef _LIB_INA219_PI_
-#define _LIB_INA219_PI_
+#ifndef _LIB_INA219_PI_2
+#define _LIB_INA219_PI_2
 
-#define INA219_ADDRESS                         (0x40)    // 1000000 (A0+A1=GND)
-#define INA219_READ                            (0x01)
-#define INA219_REG_CONFIG                      (0x00)
-#define INA219_CONFIG_RESET                    (0x8000)  // Reset Bit
-#define INA219_CONFIG_BVOLTAGERANGE_MASK       (0x2000)  // Bus Voltage Range Mask
-enum{
-    INA219_CONFIG_BVOLTAGERANGE_16V =        (0x0000),  // 0-16V Range
-    INA219_CONFIG_BVOLTAGERANGE_32V =        (0x2000),  // 0-32V Range
-};
-#define INA219_CONFIG_GAIN_MASK                (0x1800)  // Gain Mask
-enum{
-    INA219_CONFIG_GAIN_1_40MV        =       (0x0000),  // Gain 1, 40mV Range
-    INA219_CONFIG_GAIN_2_80MV        =       (0x0800),  // Gain 2, 80mV Range
-    INA219_CONFIG_GAIN_4_160MV       =       (0x1000),  // Gain 4, 160mV Range
-    INA219_CONFIG_GAIN_8_320MV       =       (0x1800),  // Gain 8, 320mV Range
-  };
-#define INA219_CONFIG_BADCRES_MASK             (0x0780)  // Bus ADC Resolution Mask
-enum {
-    INA219_CONFIG_BADCRES_9BIT       =       (0x0000),  // 9-bit bus res = 0..511
-    INA219_CONFIG_BADCRES_10BIT      =       (0x0080),  // 10-bit bus res = 0..1023
-    INA219_CONFIG_BADCRES_11BIT      =       (0x0100),  // 11-bit bus res = 0..2047
-    INA219_CONFIG_BADCRES_12BIT       =      (0x0180),  // 12-bit bus res = 0..4097
-};
-#define INA219_CONFIG_SADCRES_MASK             (0x0078)  // Shunt ADC Resolution and Averaging Mask
-enum {
-    INA219_CONFIG_SADCRES_9BIT_1S_84US     = (0x0000),  // 1 x 9-bit shunt sample
-    INA219_CONFIG_SADCRES_10BIT_1S_148US   = (0x0008),  // 1 x 10-bit shunt sample
-    INA219_CONFIG_SADCRES_11BIT_1S_276US   = (0x0010),  // 1 x 11-bit shunt sample
-    INA219_CONFIG_SADCRES_12BIT_1S_532US   = (0x0018),  // 1 x 12-bit shunt sample
-    INA219_CONFIG_SADCRES_12BIT_2S_1060US  = (0x0048),	 // 2 x 12-bit shunt samples averaged together
-    INA219_CONFIG_SADCRES_12BIT_4S_2130US  = (0x0050),  // 4 x 12-bit shunt samples averaged together
-    INA219_CONFIG_SADCRES_12BIT_8S_4260US  = (0x0058),  // 8 x 12-bit shunt samples averaged together
-    INA219_CONFIG_SADCRES_12BIT_16S_8510US = (0x0060),  // 16 x 12-bit shunt samples averaged together
-    INA219_CONFIG_SADCRES_12BIT_32S_17MS   = (0x0068),  // 32 x 12-bit shunt samples averaged together
-    INA219_CONFIG_SADCRES_12BIT_64S_34MS   = (0x0070),  // 64 x 12-bit shunt samples averaged together
-    INA219_CONFIG_SADCRES_12BIT_128S_69MS =  (0x0078),  // 128 x 12-bit shunt samples averaged together
-};
-#define INA219_CONFIG_MODE_MASK                (0x0007)  // Operating Mode Mask
-enum {   
-    INA219_CONFIG_MODE_POWERDOWN          =  (0x0000),
-    INA219_CONFIG_MODE_SVOLT_TRIGGERED    =  (0x0001),
-    INA219_CONFIG_MODE_BVOLT_TRIGGERED    =  (0x0002),
-    INA219_CONFIG_MODE_SANDBVOLT_TRIGGERED = (0x0003),
-    INA219_CONFIG_MODE_ADCOFF             =  (0x0004),
-    INA219_CONFIG_MODE_SVOLT_CONTINUOUS  =  (0x0005),
-    INA219_CONFIG_MODE_BVOLT_CONTINUOUS   =  (0x0006),
-    INA219_CONFIG_MODE_SANDBVOLT_CONTINUOUS = (0x0007),	
-};
-#define INA219_REG_SHUNTVOLTAGE                (0x01)
-#define INA219_REG_BUSVOLTAGE                  (0x02)
-#define INA219_REG_POWER                       (0x03)
-#define INA219_REG_CURRENT                     (0x04)
-#define INA219_REG_CALIBRATION                 (0x05)
+#define RANGE_16V                           0 // Range 0-16 volts
+#define RANGE_32V                           1 // Range 0-32 volts
+
+#define GAIN_1_40MV                         0 // Maximum shunt voltage 40mV
+#define GAIN_2_80MV                         1 // Maximum shunt voltage 80mV
+#define GAIN_4_160MV                        2 // Maximum shunt voltage 160mV
+#define GAIN_8_320MV                        3 // Maximum shunt voltage 320mV
+#define GAIN_AUTO                          -1 // Determine gain automatically
+
+#define ADC_9BIT                            0  // 9-bit conversion time  84us.
+#define ADC_10BIT                           1  // 10-bit conversion time 148us.
+#define ADC_11BIT                           2  // 11-bit conversion time 2766us.
+#define ADC_12BIT                           3  // 12-bit conversion time 532us.
+#define ADC_2SAMP                           9  // 2 samples at 12-bit, conversion time 1.06ms.
+#define ADC_4SAMP                           10 // 4 samples at 12-bit, conversion time 2.13ms.
+#define ADC_8SAMP                           11 // 8 samples at 12-bit, conversion time 4.26ms.
+#define ADC_16SAMP                          12 // 16 samples at 12-bit,conversion time 8.51ms
+#define ADC_32SAMP                          13 // 32 samples at 12-bit, conversion time 17.02ms.
+#define ADC_64SAMP                          14 // 64 samples at 12-bit, conversion time 34.05ms.
+#define ADC_128SAMP                         15 // 128 samples at 12-bit, conversion time 68.10ms.
+
+#define __ADDRESS                           0x40
+
+#define __REG_CONFIG                        0x00
+#define __REG_SHUNTVOLTAGE                  0x01
+#define __REG_BUSVOLTAGE                    0x02
+#define __REG_POWER                         0x03
+#define __REG_CURRENT                       0x04
+#define __REG_CALIBRATION                   0x05
+
+#define __RST                               15
+#define __BRNG                              13
+#define __PG1                               12
+#define __PG0                               11
+#define __BADC4                             10
+#define __BADC3                             9
+#define __BADC2                             8
+#define __BADC1                             7
+#define __SADC4                             6
+#define __SADC3                             5
+#define __SADC2                             4
+#define __SADC1                             3
+#define __MODE3                             2
+#define __MODE2                             1
+#define __MODE1                             0
+
+#define __OVF                               1
+#define __CNVR                              2
+
+#define __CONT_SH_BUS                       7
+
+#define __SHUNT_MILLIVOLTS_LSB              0.01    // 10uV
+#define __BUS_MILLIVOLTS_LSB                4       // 4mV
+#define __CALIBRATION_FACTOR                0.04096
+#define __MAX_CALIBRATION_VALUE             0xFFFE  // Max value supported (65534 decimal)
+
+// In the spec (p17) the current LSB factor for the minimum LSB is
+// documented as 32767, but a larger value (100.1% of 32767) is used
+// to guarantee that current overflow can always be detected.
+#define __CURRENT_LSB_FACTOR                32800
 
 
-class ina219{
- public:
-  ina219(uint8_t addr = INA219_ADDRESS);
-  void begin(void);
-  void setCalibration_32V_2A(void);
-  void setCalibration_32V_1A(void);
-  void setCalibration_16V_400mA(void);
-  float getBusVoltage_V(void);
-  float getShuntVoltage_mV(void);
-  float getCurrent_mA(void);
-  float getPower_mW(void);
+#include <stdint.h>
 
- private:
-  int ina219_fd;
-  uint8_t ina219_i2caddr;
-  uint32_t ina219_calValue;
-  // The following multipliers are used to convert raw current and power
-  // values to mA and mW, taking into account the current config settings
-  uint32_t ina219_currentDivider_mA;
-  uint32_t ina219_powerMultiplier_mW;
+class INA219{
+    /* Constructors */
+    public:
+        INA219(int shunt_resistance);                                           // Use default values, auto gain
+        INA219(int shunt_resistance, uint8_t address);                          // Auto gain
+        INA219(int shunt_resistance, float max_expected_amps);                  // Custom max amps
+        INA219(int shunt_resistance, float max_expected_amps, uint8_t address); // Custom device address and amps
+    
+    
+    /* Private functions */
+    private:
+        uint16_t read_register(uint8_t register_value);
+        void write_register(uint8_t register_address, uint16_t register_value);
 
-  void wireWriteRegister(uint8_t reg, uint16_t value);
-  void wireReadRegister(uint8_t reg, uint16_t *value);
-  int16_t getBusVoltage_raw(void);
-  int16_t getShuntVoltage_raw(void);
-  int16_t getCurrent_raw(void);
-  int16_t getPower_raw(void);
+        int determine_gain(float max_expected_amps);
+        float determine_current_lsb(float max_expected_amps, float max_possible_amps);
+
+        void calibrate(int bus_volts_max, float shunt_volts_max, float max_expected_amps);
+
+        void handle_current_overflow();
+        void increase_gain();
+    
+
+    /* Private viarables */
+    private:
+        int     _file_descriptor;
+        int     _shunt_ohms;
+        float   _max_expected_amps;
+        float   _min_device_current_lsb;
+        bool    _auto_gain_enabled;
+        
+        int     _voltage_range;
+        int     _gain;
+
+        int     _current_lsb;
+        int     _power_lsb;
+    
+
+    /* Public functions */
+    public:
+        void configure(int voltage_range, int gain, int bus_adc, int shunt_adc);
+        void sleep();
+        void wake();
+        void reset();
+
+        bool has_current_overflow();
+
+        float voltage();
+        float shunt_voltage();
+        float supply_voltage();
+        float current();
+        float power();
+    
+
+    /* Public variables, because cant #define arrays */
+    public:
+        float __GAIN_VOLTS[4]   = {0.04, 0.08, 0.16, 0.32};
+        int   __BUS_RANGE[2]    = {16, 32};
 };
 
 #endif

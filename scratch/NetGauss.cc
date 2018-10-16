@@ -145,5 +145,6 @@ int main (int argc, char *argv[])
   Simulator::Destroy ();
 
   PrintResults();
+  
   return 0;
 }
